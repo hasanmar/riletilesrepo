@@ -1,0 +1,449 @@
+body {
+    background-color: black;
+}
+
+.grid-wrapper {
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+}
+
+.grid {
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    height: 600px;
+    width: 600px;
+    cursor: auto;
+}
+
+.grid div {
+    border: 1px solid gray;
+    height: 9.7%;
+    width: 9.7%;
+}
+
+.unsafe {
+    animation-name: lightBack;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+.hiddenPath {
+    animation-name: lightBack;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+.safe {
+    background-color: white !important;
+    font-size: 50px;
+    text-align: center;
+}
+
+.waiting {
+
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    animation-name: lightBack;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes lightBack {
+
+    0% {
+        background-color: lightblue;
+    }
+
+    15% {
+        background-color: lightcoral;
+    }
+
+    25% {
+        background-color: lightgreen;
+    }
+
+    50% {
+        background-color: lightpink;
+    }
+
+    65% {
+        background-color: lightseagreen;
+    }
+
+    80% {
+        background-color: indianred;
+    }
+
+    100% {
+        background-color: lightblue;
+    }
+
+}
+
+
+@keyframes animateBack {
+    0% {
+        background-color: red;
+    }
+
+    15% {
+        background-color: orange;
+    }
+
+    25% {
+        background-color: yellow;
+    }
+
+    40% {
+        background-color: rgb(255, 185, 100);
+    }
+
+    50% {
+        background-color: blue;
+    }
+
+    65% {
+        background-color: blueviolet;
+    }
+
+    80% {
+        background-color: magenta;
+    }
+
+    100% {
+        background-color: violet;
+    }
+}
+
+#startBtn {
+    height: 30px;
+    position: absolute;
+    left: 27.5%;
+    top: 43%;
+}
+
+#instructions {
+    width: 25%;
+    position: absolute;
+    top: 90px;
+    background-color: rgba(204, 204, 204, 0.5);
+    height: 400px;
+    text-align: center;
+}
+
+#instructionsBtn {
+    height: 30px;
+    position: absolute;
+    left: 25%;
+    top: 500px;
+}
+
+#instructions ul {
+    margin-top: 1px 0;
+    list-style: none;
+}
+
+#lvl1Btn {
+    height: 30px;
+    position: absolute;
+    left: 70%;
+    top: 43%;
+}
+
+.trap {
+    animation-name: animateBack;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    /* background-color: lime; */
+
+}
+
+.bouncingball {
+    width: 30px !important;
+    height: 40px !important;
+    border-radius: 100%;
+    background: #ccc;
+    animation: bounce 1.5s;
+    animation-iteration-count: infinite;
+    position: absolute;
+    animation-timing-function: ease-in;
+}
+
+
+.bouncingball2 {
+    width: 50px !important;
+    height: 55px !important;
+    border-radius: 100%;
+    background: #ccc;
+    animation: bounce2 3s;
+    animation-iteration-count: infinite;
+    position: absolute;
+    animation-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.Mystery,
+.trapBlock,
+.trap,
+.levelDone,
+.startLvl {
+    background-color: goldenrod;
+    font-size: 50px;
+    text-align: center;
+}
+
+.content {
+    color: #ccc;
+    text-align: center;
+    font-size: 45px;
+    position: absolute;
+    top: 55px;
+    right: 0;
+}
+
+#level {
+    color: #ccc;
+    text-align: center;
+    font-size: 55px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#ball1 {
+    width: 43px !important;
+    height: 52px !important;
+    border-radius: 100%;
+    animation: goRight 1.7s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.1, 0.6, 0.6, 0.1);
+    background: #ccc;
+    position: absolute;
+    top: 490px;
+    left: 470px;
+}
+
+#timer{
+    position: absolute;
+    left: 30%;
+    font-size: 60px;
+}
+
+#ball2 {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 100%;
+    animation: goRight 1.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(1, 0.4, 0.4, 1);
+    /* animation-timing-function: ease-in-out; */
+    background: #ccc;
+    position: absolute;
+    top: 380px;
+    left: 470px;
+}
+
+#ball3 {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 100%;
+    animation: goUp 1.8s;
+    animation-iteration-count: infinite;
+    /* animation-timing-function: cubic-bezier(.35,.55,.5,.55); */
+    animation-timing-function: ease-in-out;
+    background: #ccc;
+    position: absolute;
+    top: 690px;
+    left: 470px;
+}
+
+
+@keyframes goUp {
+    from {
+        left: 470px;
+    }
+
+    25% {
+        left: 780px;
+        top: 560px;
+    }
+
+    50% {
+        left: 1050px;
+        top: 690px;
+    }
+
+    75% {
+        left: 850px;
+        top: 620px;
+    }
+
+    85% {
+        left: 780px;
+        top: 620px;
+    }
+
+    to {
+        right: 450px;
+        top: 690px;
+    }
+}
+
+@keyframes goRight {
+    from {
+        left: 450px
+    }
+
+    50% {
+        left: 1050px;
+    }
+
+    to {
+        left: 450px;
+    }
+}
+
+@keyframes bounce2 {
+    from {
+        top: 360px;
+        left: 30%;
+    }
+
+    35% {
+        top: 200px;
+        left: 45%;
+    }
+
+    45% {
+        top: 250px;
+        left: 48%;
+    }
+
+    55% {
+        top: 350px;
+        left: 65%;
+    }
+
+    85% {
+        top: 65px;
+    }
+
+    to {
+        top: 360px;
+        left: 30%;
+    }
+}
+
+@keyframes bounce {
+    from {
+        top: 80px;
+        left: 30%;
+    }
+
+    35% {
+        top: 90px;
+        left: 45%;
+    }
+
+    45% {
+        top: 180px;
+        left: 70%;
+    }
+
+    55% {
+        top: 205px;
+        left: 60%;
+    }
+
+    60% {
+        left: 55%;
+    }
+
+    85% {
+        top: 65px;
+    }
+
+    to {
+        top: 80px;
+        left: 30%;
+    }
+}
+
+#ready {
+    display: none;
+    background-color: black;
+    border: 1px solid #ccc;
+    color: #ccc;
+    font-size: 35px;
+    position: absolute;
+    top: 25%;
+    width: 350px;
+    height: 300px;
+    left: 50%;
+    margin-left: -170px;
+    /* padding: 6px 8px 8px; */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+
+#ready button {
+    display: inline-block;
+    border: 1px solid #aaa;
+    margin-top: 25%;
+    padding: 5px;
+    text-align: center;
+    width: 80px;
+    cursor: pointer;
+}
+
+#muteBtn{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left : 27%;
+    top: 53%;
+}
+
+#logoName{
+    position: absolute;
+    font-style: italic;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    top: 10%;
+    font-size: 50px;
+    animation: logoAnim 5s infinite;
+}
+
+@keyframes logoAnim {
+
+    0% {
+        color: lightblue;
+    }
+
+    15% {
+        color: lightcoral;
+    }
+
+    25% {
+        color: lightgreen;
+    }
+
+    50% {
+        color: lightpink;
+    }
+
+    65% {
+        color: lightseagreen;
+    }
+
+    80% {
+        color: indianred;
+    }
+
+    100% {
+        color: lightblue;
+    }
+
+}

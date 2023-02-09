@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/styles/styles.css">
+
+    <title>Document</title>
+    <script>
+        $(document).ready(() => {
+            let StartTimer = false
+            var isSafe = true
+            let deaths = 0;
+            let timer = 12
+            const width = 10
+            const gridCellCount = 120
+            const cells = []
+            const powerUps = ['invincible', 'createPath']
+            const traps = ['disappear', 'hidePath']
+            const mysteryBlock = powerUps.concat(traps)
+            const level1Path = [50, 51, 52]
+            const hiddenPath = [41, 31, 21, 11,
+                12, 13, 14, 24, 34, 44, 45,
+                46, 36, 37, 38, 48, 58, 61, 71,
+                81, 82, 83, 84, 85, 95, 105, 106, 107, 108, 98, 88, 77, 87
+                , 67, 68, 69]
+            const levelArr = level1Path.concat(hiddenPath)
+            // const level2Path = [59, 58, 57]
+            // var revealPath = false
+
+            $('#instructionsBtn').click(() => {
+                $('#instructions').toggle()
+                $('#logoName').toggle()
+            })
+
+
+            //level 1 function
+            function level1() {
+                isSafe = true
+                $('#level').text('Level 1')
+                $('.bouncingball').show()
+                $('.bouncingball2').show()
+                $('#ball1').show()
+                $('#ball2').show()
+                $('#ball3').show()
+                // $('.upBall').show()
+                for (i = 0; i < gridCellCount; i++) {
+                    $('.waiting').remove()
+                    $('#startBtn').hide()
+                    const cell = document.createElement('div')
+                    cell.setAttribute("class", "level1")
+                    // cell.innerHTML = i
+                    if (level1Path.indexOf(i) === -1) {
+                        cell.setAttribute("class", "unsafe")
+                    }
+                    else {
+                        cell.setAttribute("class", "safe")
+                    }
+                    if (hiddenPath.indexOf(i) !== -1) {
+                        cell.setAttribute("class", "hiddenPath")
+
+                    }
+
+                    cells.push(cell)
+                    $('.grid').append(cell)
+                }
+
+                //------------xxxxx------------------------xxxxxxxx
+                // $(".safe").eq(16).addClass('trapBlock')
+                // $(".safe").eq(2).addClass('Mystery')
+                $(".safe").eq(2).addClass('startLvl').css({
+                    'background-color': 'white',
+                    'color': 'yellow'
+                }).html('&#9737;')
+
+                $(".hiddenPath").eq(20).addClass('levelDone').html('&#9733;').css('color', 'yellow')
+                $(".hiddenPath").eq(12).addClass('trapBlock')
+                $(".hiddenPath").eq(11).addClass('Mystery')
+                $(".hiddenPath").eq(23).addClass('trapBlock')
+                $(".hiddenPath").eq(31).addClass('Mystery')
+                $('.unsafe').mouseenter(() => {
+                    $('#audio2').get(0).play()
+                    isSafe = false
+                })
+                $('.startLvl').mouseenter(() => {
+                    $('.hiddenPath').addClass('safe').css('background-color', 'lime')
+                })
+                $('.levelDone').mouseenter(() => {
+                    timer = 0
+                    $('.message').text('You won, only took ' + (deaths + 1) + ' tries.')
+                    winFunc()
+                    $('.unsafe').hide()
+                    $('.safe').hide()
+                    $('.hiddenPath').hide()
+                    $('#timer').hide()
+                    $('#audio4').get(0).play()
+                    $('#audio3').get(0).pause()
+                    waitToStart()
+                    deaths = 0
+                    $('.bouncingball').hide()
+                    $('.bouncingball2').hide()
+                    $('#lvl1Btn').hide()
+                    $('#ball1').hide()
+                    $('#ball2').hide()
+                    $('#ball3').hide()
+                })
+                $('.btn').click(() => {
+                    waitToStart()
+                })
+                // $('.startLvl').mouseenter(() => {
+                //     $(".levelDone")
+                //         .html('&#9733;').css({
+                //             'background-color': 'white',
+                //             'color': 'yellow'
+                //         })
+                // })
+
+                $('.trapBlock').mouseenter((element) => {
+                    trapGet()
+                })
+                    .text('!')
+                $(".Mystery")
+                    .mouseenter((element) => {
+                        element.target.style.backgroundColor = "green"
+                        mysteryGetBack()
+                    })
+                    .text('?')
+
+                $('.bouncingball').mouseenter(() => {
+                    $('#audio1').get(0).play()
+                    isSafe = false;
+                })
+                $('.bouncingball2').mouseenter(() => {
+                    $('#audio1').get(0).play()
+                    isSafe = false;
+                })
+                $('#ball1').mouseenter(() => {
+                    $('#audio1').get(0).play()
+                    isSafe = false;
+                })
+                $('#ball2').mouseenter(() => {
+                    $('#audio1').get(0).play()
+                    isSafe = false;
+                })
+                $('#ball3').mouseenter(() => {
+                    $('#audio1').get(0).play()
+                    isSafe = false;
+                })
+
+
+                setInterval(() => {
+                    if (!isSafe) {
+                        cells.forEach((element, key) => {
+                            cells[key].remove()
+                            $('.bouncingball').hide()
+                            $('.bouncingball2').hide()
+                            $('#lvl1Btn').hide()
+                            $('#ball1').hide()
+                            $('#ball2').hide()
+                            $('#ball3').hide()
+                        })
+                        timer = 0
+                        $('#timer').hide()
+                        isSafe = true
+                        // StartTimer = false
+                        // timer = 30
+                        waitToStart()
+                        deaths++
+                        if (deaths === 1) $('#killCount').text(' once')
+                        else $('#killCount').text(deaths + ' times')
+                        $('#audio3').get(0).pause()
+                    }
+                }, 200)
+
+                // $('#lvl1Btn').click(() => {
+                //     $('.bouncingball').hide()
+                //     $('.bouncingball2').hide()
+                //     // level2()
+                // })
+            }
+            //level 2 function
+            //-----------------------------xxxxxxxxxxxx----------------------xxxxxxxxxxxx----------
+            // const level2Reveal = [56, 55, 54, 53, 52, 51, 50]
+            // function level2() {
+            //     isSafe = true
+            //     $('#level').text('Level 2')
+            //     $('#startBtn').hide()
+            //     $('.unsafe').remove()
+            //     $('.safe').remove()
+            //     $('#lvl1Btn').hide()
+
+            //     for (i = 0; i < gridCellCount; i++) {
+            //         const cell = document.createElement('div')
+            //         cell.removeAttribute("class")
+            //         cell.innerHTML = i
+            //         if (level2Path.indexOf(i) === -1) {
+            //             cell.setAttribute("class", "unsafe")
+            //         }
+            //         else {
+            //             cell.setAttribute("class", "safe")
+            //         }
+            //         if (level2Reveal.indexOf(i) !== -1) {
+            //             cell.setAttribute("class", "hiddenPath")
+            //         }
+            //         cells.push(cell)
+            //         $('.grid').append(cell)
+
+            //     }
+
+            //     //setInterval(() => {
+            //     //     if (revealPath) {
+            //     //         level2Reveal.forEach((element) => {
+            //     //             console.log(element)
+            //     //             $('.unsafe').eq(element).addClass('safe')
+            //     //             $('.unsafe').eq(element).removeClass('unsafe')
+            //     //         })
+            //     //         revealPath = false
+            //     //     }
+            //     // }, 200)
+
+
+            //     $(".safe").eq(0).addClass('startLvl').css({
+            //         'background-color': 'white',
+            //         'color': 'yellow'
+            //     }).html('&#9737;')
+
+            //     $('.startLvl').mouseenter((element) => {
+            //         revealPath = true
+            //         $('.hiddenPath').css({
+            //             'background-color': 'lime',
+            //             'animation-duration': '0s'
+            //         })
+            //         element.target.removeAttribute('class')
+            //         element.target.className = "safe"
+            //         isSafe = true
+            //         // $(".safe").eq(1).addClass('levelDone')
+            //     })
+
+
+            //     // $(".safe").eq(1).addClass('levelDone')
+            //     $('.safe').mouseenter(() => {
+            //         console.log('yes');
+            //         isSafe = true
+            //     })
+            //     $('.unsafe').mouseenter(() => {
+            //         console.log('no')
+            //         isSafe = false
+            //     })
+
+
+            //     setInterval(() => {
+            //         if (!isSafe) {
+            //             cells.forEach((element, key) => {
+            //                 cells[key].remove()
+            //             })
+            //             isSafe = true
+            //             level2()
+            //             deaths++
+            //             if (deaths === 1) $('#killCount').text(' once')
+            //             else $('#killCount').text(deaths + ' times')
+            //         }
+            //     }, 500)
+            // }
+
+
+            function winFunc(note, done) {
+                var box = $("#ready");
+                box.find(".message").text(note);
+                box.find(".btn").unbind().click(function () {
+                    box.hide();
+                });
+                box.find(".btn").click(done); box.show();
+            }
+
+            function waitToStart() {
+                $('div').css("cursor", "auto")
+                $('#startBtn').show()
+                $('.bouncingball').hide()
+                $('.bouncingball2').hide()
+                $('#ball1').hide()
+                $('#ball2').hide()
+                $('#ball3').hide()
+                for (i = 0; i < gridCellCount; i++) {
+                    const cell = document.createElement('div')
+                    cell.removeAttribute("class")
+                    cell.setAttribute("class", "waiting")
+                    cells.push(cell)
+                    $('.grid').append(cell)
+                }
+            }
+
+            function mysteryGetBack() {
+                var mystery = Math.floor(Math.random() * mysteryBlock.length)
+                if (mysteryBlock[mystery] === 'disappear') disappear()
+                else if (mysteryBlock[mystery] === 'createPath') createPath()
+                else if (mysteryBlock[mystery] === 'invincible') invincible()
+                else if (mysteryBlock[mystery] === 'hidePath') hidePath()
+                console.log(mysteryBlock[mystery] + ' ' + mystery);
+            }
+            function trapGet() {
+                var trap = Math.floor(Math.random() * traps.length)
+                if (traps[trap] === 'disappear') disappear()
+                else if (traps[trap] === 'hidePath') hidePath()
+            }
+
+
+            //display main menu
+            waitToStart()
+            //----------------------------------------------
+            // level2()
+            $("#startBtn").mousedown(() => {
+                $('#audio3').get(0).play()
+                timer = 12
+                $('#timer').show()
+                level1()
+                StartTimer = true
+                if (StartTimer) {
+                    const timerInt = setInterval(() => {
+                        $('#timer').css('color', 'white')
+                        $('#timer').text('Time left:' + timer)
+                        timer--
+                        if (timer === 0) {
+                            StartTimer = false
+                            clearInterval(timerInt)
+                            isSafe = false
+                            timer = 0
+                        }
+                        else if (timer < 0) {
+                            clearInterval(timerInt)
+                        }
+                    }, 1000)
+                }
+            })
+
+
+            // disappear trap
+            function disappear() {
+                $("div").css("cursor", "none")
+                setTimeout(() => {
+                    $("div").css("cursor", "auto")
+                }, 1500)
+            }
+
+            $('#muteBtn').click(() => {
+                var aud3 = $("#audio3").prop("muted")
+                $('#audio3').prop('muted', !aud3)
+                var aud2 = $("#audio2").prop("muted")
+                $('#audio2').prop('muted', !aud2)
+                var aud1 = $("#audio1").prop("muted")
+                $('#audio1').prop('muted', !aud1)
+                var aud4 = $("#audio4").prop("muted")
+                $('#audio4').prop('muted', !aud4)
+            })
+
+            //invincibility powerup
+            function invincible() {
+                $('div').css("cursor", "wait")
+                $('.unsafe').mouseenter((element) => {
+                    isSafe = true
+                })
+                $('.bouncingball').mouseenter(() => {
+                    isSafe = true
+                })
+                $('.bouncingball2').mouseenter(() => {
+                    isSafe = true
+                })
+                $('#ball1').mouseenter(() => {
+                    isSafe = true
+                })
+                $('#ball2').mouseenter(() => {
+                    isSafe = true
+                })
+                $('#ball3').mouseenter(() => {
+                    isSafe = true
+                })
+                setTimeout(() => {
+                    $('div').css("cursor", "auto")
+                    $('.unsafe').mouseenter((element) => {
+                        isSafe = false
+                    })
+                    $('.bouncingball').mouseenter(() => {
+                        isSafe = false
+                    })
+                    $('.bouncingball2').mouseenter(() => {
+                        isSafe = false
+                    })
+                    $('#ball1').mouseenter(() => {
+                        isSafe = false
+                    })
+                    $('#ball2').mouseenter(() => {
+                        isSafe = false
+                    })
+                    $('#ball3').mouseenter(() => {
+                        isSafe = false
+                    })
+                }, 600)
+            }
+
+            // create new path powerup
+            function createPath() {
+                $('div').css("cursor", "crosshair")
+                $('.unsafe').mouseenter((element) => {
+                    isSafe = true
+                    element.target.className = "safe"
+                })
+                setTimeout(() => {
+                    $('div').css("cursor", "auto")
+                    $('.unsafe').mouseenter((element) => {
+                        isSafe = false
+                        // element.target.className = "unsafe"
+                    })
+                }, 600)
+            }
+
+            function hidePath() {
+                cells.forEach((element) => {
+                    element.className = "trap"
+                })
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <div id='timer'></div>
+    <button id="startBtn">Start</button>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScjBnLthllWXC7R9tJLQIMrJlXEGDoTwTS0GSFfA4&s"
+        id="muteBtn">
+    <div class="grid-wrapper">
+        <div class="grid">
+            <audio id="audio1" src="/sounds/Boing-sound-effect.mp3" type="audio/mp3"></audio>
+            <audio id="audio2" src="/sounds/086398_game-die-81356.mp3" type="audio/mp3"></audio>
+            <audio id="audio3" src="/sounds/boing-6222.mp3" type="audio/mp3" loop></audio>
+            <audio id="audio4" src="/sounds/win-sfx-38507.mp3" type="audio/mp3"></audio>
+            <div class="bouncingball" hidden></div>
+            <div class="bouncingball2" hidden></div>
+            <div id='ball1' hidden></div>
+            <div id='ball2' hidden></div>
+            <div id='ball3' hidden></div>
+        </div>
+    </div>
+    <div class="content"> Died <span id="killCount"> 0 times</span>.</div>
+    <div id="level"></div>
+    <button id="instructionsBtn">Instructions</button>
+    <div id="logoName">
+        <h1>Rile Tiles</h1>
+    </div>
+    <div id="instructions" hidden>
+        <h1>Instructions</h1>
+        <h3>The rules of the game are simple, navigate the white path and don't get hit.</h3>
+        <h5><strong>! block</strong> triggers traps:</h5>
+        <ul>
+            <li>cursor is hidden for 1500ms </li>
+            <li>entire path disappears for the rest of the run</li>
+            <li></li>
+        </ul>
+        <h5><strong>? block</strong> triggers mystery block:</h5>
+        <ul>
+            <li><img src="https://qph.cf2.quoracdn.net/main-qimg-450fd35fc7bf747a96f7709b1770de5a"
+                    style="height:20px ;"> Invincible for 600ms</li>
+            <li><img src="https://cdn4.iconfinder.com/data/icons/css-cursors-1/48/Sed-08-512.png" style="height: 40px;">
+                can create your own path for 600ms</li>
+            <br>
+            <li> or trap</li>
+        </ul>
+    </div>
+    <button id="lvl1Btn" hidden>Next level</button>
+
+    <div id="ready">
+        <div class="message"></div>
+        <button class="btn">OK</button>
+    </div>
+
+</body>
+<script>
+
+</script>
+
+
+</html>
